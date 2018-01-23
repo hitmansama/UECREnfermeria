@@ -38,6 +38,8 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
         jcbElectivo.setSelectedItem(0);
         cargarEstudiantes();
         cargarRepresentantes();
+        jchRecibido.setEnabled(false);
+        jtxtAlergia.setEnabled(false);
 
     }
 
@@ -251,6 +253,11 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
         });
 
         jchRecibido.setText("Formulario recibido");
+        jchRecibido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jchRecibidoActionPerformed(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Alergias"));
 
@@ -387,7 +394,8 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
         activarOyentes = true;
     }//GEN-LAST:event_formInternalFrameOpened
     private boolean camposLlenos() {
-        return jcbElectivo.getSelectedIndex() > 0 && jcbEstudiante.getSelectedIndex() > 0 && jcbRepresentante.getSelectedIndex() > 0 && !jtxtPesoInicial.getText().trim().isEmpty() && !jtxtEstaturaInicial.getText().trim().isEmpty() && !jtxtCurso.getText().trim().isEmpty() && !jtxtParalelo.getText().trim().isEmpty();
+        return jcbElectivo.getSelectedIndex()>0 && jcbEstudiante.getSelectedIndex()>0 && 
+                jcbRepresentante.getSelectedIndex()>0 ;
     }
     private void jcbElectivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbElectivoActionPerformed
         if (activarOyentes) {
@@ -422,18 +430,9 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         if (camposLlenos()) {
-            int idEstudiante = consultas.obtenerIdEstudiantePorNombreApellido(jcbEstudiante.getSelectedItem().toString());
-            int idRepresentante = consultas.obtenerIdRepresentantePorNombreApellido(jcbRepresentante.getSelectedItem().toString());
-            int idElectivo = consultas.obtenerIdElectivo(jcbElectivo.getSelectedItem().toString());
-            float peso = Float.parseFloat(jtxtPesoInicial.getText());
-            float estatura = Float.parseFloat(jtxtEstaturaInicial.getText());
-
-            if (consultas.guardarAlumno(idEstudiante, idRepresentante, idElectivo, jtxtCurso.getText(), jtxtParalelo.getText(), estatura, peso)) {
-                Herramientas.MensajeInfo("Alumno guardado correctamente");
-                vaciarRegistro();
-            }
+            Herramientas.MensajeAdv("Campos llenos");
         } else {
-            Herramientas.MensajeAdv("Los capos son obligatorios");
+            Herramientas.MensajeAdv("Los campos son obligatorios");
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -457,8 +456,20 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jcbEstudianteActionPerformed
 
     private void jchEnviadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jchEnviadoActionPerformed
-        // TODO add your handling code here:
+        jchRecibido.setEnabled(jchEnviado.isSelected());
+        if (!jchEnviado.isSelected()) {
+            jchRecibido.setSelected(false);
+            jtxtAlergia.setText("");
+            jtxtAlergia.setEnabled(jchRecibido.isSelected());
+        }
     }//GEN-LAST:event_jchEnviadoActionPerformed
+
+    private void jchRecibidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jchRecibidoActionPerformed
+        jtxtAlergia.setEnabled(jchRecibido.isSelected());
+        if (!jchRecibido.isSelected()) {
+            jtxtAlergia.setText("");
+        }
+    }//GEN-LAST:event_jchRecibidoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
