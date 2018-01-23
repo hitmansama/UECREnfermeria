@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19/01/2018 10:51:39 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pojos.Historialclinico" table="historialclinico" catalog="uecr" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="alumno" class="pojos.Alumno" fetch="select">
+            <column name="alumno_id" not-null="true" />
+        </many-to-one>
+        <property name="enfermedad" type="string">
+            <column name="enfermedad" length="150" not-null="true" />
+        </property>
+        <property name="fecha" type="date">
+            <column name="fecha" length="10" not-null="true" />
+        </property>
+        <property name="hora" type="time">
+            <column name="hora" length="8" not-null="true" />
+        </property>
+        <property name="seguimiento" type="java.lang.Byte">
+            <column name="seguimiento" />
+        </property>
+        <property name="detalle" type="string">
+            <column name="detalle" length="250" />
+        </property>
+    </class>
+</hibernate-mapping>

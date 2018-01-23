@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19/01/2018 10:51:39 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pojos.Alumno" table="alumno" catalog="uecr" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="electivo" class="pojos.Electivo" fetch="select" lazy="false">
+            <column name="electivo_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="persona" class="pojos.Persona" fetch="select" lazy="false">
+            <column name="persona_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="representante" class="pojos.Representante" fetch="select" lazy="false">
+            <column name="representante_id" not-null="true" />
+        </many-to-one>
+        <property name="curso" type="string">
+            <column name="curso" length="15" not-null="true" />
+        </property>
+        <property name="paralelo" type="string">
+            <column name="paralelo" length="2" not-null="true" />
+        </property>
+        <property name="estaturaInicial" type="float">
+            <column name="estaturaInicial" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="pesoInicial" type="float">
+            <column name="pesoInicial" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="estaturaFinal" type="java.lang.Float">
+            <column name="estaturaFinal" precision="12" scale="0" />
+        </property>
+        <property name="pesoFinal" type="java.lang.Float">
+            <column name="pesoFinal" precision="12" scale="0" />
+        </property>
+        <property name="seEnvioFormulario" type="java.lang.Byte">
+            <column name="seEnvioFormulario" />
+        </property>
+        <property name="seRecibioFormulario" type="java.lang.Byte">
+            <column name="seRecibioFormulario" />
+        </property>
+        <property name="alergia" type="string">
+            <column name="alergia" length="150" />
+        </property>
+        <set name="historialclinicos" table="historialclinico" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="alumno_id" not-null="true" />
+            </key>
+            <one-to-many class="pojos.Historialclinico" />
+        </set>
+    </class>
+</hibernate-mapping>
