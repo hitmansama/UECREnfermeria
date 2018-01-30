@@ -19,8 +19,10 @@ import recursos.Soporte.Herramientas;
 import recursos.Soporte.consultas;
 import recursos.conexion.hPersona;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import pojos.Alumno;
 import pojos.Electivo;
 import pojos.Representante;
+import recursos.conexion.hAlumno;
 import recursos.conexion.hElectivo;
 import recursos.conexion.hRepresentante;
 
@@ -51,6 +53,10 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
         jtxtEstaturaInicial.setText("");
         jtxtParalelo.setText("");
         jtxtPesoInicial.setText("");
+        jtxtAlergia.setText("");
+        jchEnviado.setSelected(false);
+        jchRecibido.setSelected(false);
+        
     }
 
     void cargarEstudiantes() {
@@ -394,8 +400,8 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
         activarOyentes = true;
     }//GEN-LAST:event_formInternalFrameOpened
     private boolean camposLlenos() {
-        return jcbElectivo.getSelectedIndex()>0 && jcbEstudiante.getSelectedIndex()>0 && 
-                jcbRepresentante.getSelectedIndex()>0 ;
+        return jcbElectivo.getSelectedIndex() > 0 && jcbEstudiante.getSelectedIndex() > 0
+                && jcbRepresentante.getSelectedIndex() > 0 && !jtxtCurso.getText().trim().isEmpty() && !jtxtParalelo.getText().trim().isEmpty() && jchRecibido.isSelected()?!jtxtAlergia.getText().trim().isEmpty():true;
     }
     private void jcbElectivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbElectivoActionPerformed
         if (activarOyentes) {
@@ -430,10 +436,27 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         if (camposLlenos()) {
-            Herramientas.MensajeAdv("Campos llenos");
-        } else {
-            Herramientas.MensajeAdv("Los campos son obligatorios");
+            Alumno aux = hAlumno.obtenerAlumnoPorPersonaElectivo((Persona) jcbEstudiante.getSelectedItem(), (Electivo) jcbElectivo.getSelectedItem());
+            if (aux == null) {
+                if (!Herramientas.isFloat(jtxtEstaturaInicial.getText().trim())) {
+                    Herramientas.MensajeErr("El campo Estatura Inicial debe ser numerico", "Formato no valido");
+                    return;
+                }
+                if (!Herramientas.isFloat(jtxtPesoInicial.getText().trim())) {
+                    Herramientas.MensajeErr("El campo Peso Inicial debe ser numerico", "Formato no valido");
+                    return;
+                }
+                if (hAlumno.nuevoAlumno((Electivo) jcbElectivo.getSelectedItem(), (Persona) jcbEstudiante.getSelectedItem(), (Representante) jcbRepresentante.getSelectedItem(), jtxtCurso.getText().trim().toUpperCase(), jtxtParalelo.getText().trim().toUpperCase(), Float.parseFloat(jtxtEstaturaInicial.getText().trim()), Float.parseFloat(jtxtPesoInicial.getText().toString()), 0f, 0f, jchEnviado.isSelected(), jchRecibido.isSelected(), jtxtAlergia.getText().trim().toUpperCase())) {
+                    Herramientas.MensajeInfo("Alumno guardado correctamente", "Datos guardados");
+                    vaciarRegistro();
+                }
+            } else {
+                Herramientas.MensajeAdv("Ya existe el alumno " + jcbEstudiante.getSelectedItem().toString() + " para el año electivo " + jcbElectivo.getSelectedItem().toString(), "Datos repetidos");
+            }
+        }else{
+            Herramientas.MensajeAdv("Todos los campos son obligatorios llenar");
         }
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed

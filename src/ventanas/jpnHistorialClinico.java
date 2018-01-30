@@ -6,8 +6,10 @@
 package ventanas;
 
 import javax.swing.JLabel;
+import pojos.Alumno;
 import recursos.Soporte.Herramientas;
 import recursos.Soporte.consultas;
+import recursos.conexion.hHistorial;
 
 /**
  *
@@ -35,9 +37,9 @@ public class jpnHistorialClinico extends javax.swing.JPanel {
     public boolean campoLleno(){
         return jcbEnfermedad.getSelectedIndex()==jcbEnfermedad.getItemCount()-1?!jtxtOtroEnfermedad.getText().trim().isEmpty():jcbEnfermedad.getSelectedIndex()>0;
     }
-    public boolean guardar(){
+    public boolean guardar(Alumno _alumno){
         if(campoLleno()){
-            if(consultas.guardarHistorialClinicoAlumno(idAlumno,jcbEnfermedad.getSelectedIndex()<jcbEnfermedad.getItemCount()-1?jcbEnfermedad.getSelectedItem().toString():jtxtOtroEnfermedad.getText(), new java.util.Date(),jTextArea1.getText())){
+            if(hHistorial.guardarHistorial(_alumno,jcbEnfermedad.getSelectedIndex()<jcbEnfermedad.getItemCount()-1?jcbEnfermedad.getSelectedItem().toString():jtxtOtroEnfermedad.getText(),jTextArea1.getText(),jCheckBox1.isSelected())){
                 Herramientas.MensajeInfo("Historial guardado");
                 return true;
             }
@@ -74,6 +76,7 @@ public class jpnHistorialClinico extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jCheckBox1 = new javax.swing.JCheckBox();
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("Fecha y hora: Genera automaticamente al guardar");
@@ -106,6 +109,8 @@ public class jpnHistorialClinico extends javax.swing.JPanel {
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
+        jCheckBox1.setText("Seguimiento");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -121,11 +126,13 @@ public class jpnHistorialClinico extends javax.swing.JPanel {
                             .addComponent(jLabel4)
                             .addComponent(jLabel5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jtxtEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jcbEnfermedad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jtxtOtroEnfermedad)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBox1)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jtxtEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jcbEnfermedad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jtxtOtroEnfermedad)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -149,6 +156,8 @@ public class jpnHistorialClinico extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -162,6 +171,7 @@ public class jpnHistorialClinico extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

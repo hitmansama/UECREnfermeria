@@ -62,4 +62,17 @@ public class hElectivo {
         HibernateUtil.cerrarSesion(sf);
         return electivo;
     }
+    /**
+     * Obtiene el año electivo actual
+     * @return 
+     */
+    public static Electivo esteElectivo(){
+        Electivo electivo = null;
+        SessionFactory sf = HibernateUtil.abrirConexion();
+        Session session = sf.openSession();
+        Query hq = session.createQuery("from Electivo where desde = year(current_date())");
+        electivo = (Electivo) hq.uniqueResult();
+        HibernateUtil.cerrarSesion(sf);
+        return electivo;
+    }
 }

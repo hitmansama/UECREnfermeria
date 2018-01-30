@@ -137,7 +137,16 @@ public class hAlumno {
         HibernateUtil.cerrarSesion(sf);
         return alumno;
     }
-
+    public static List<Alumno> obtenerAlumnosPorElectivo(Electivo _electivo){
+         List<Alumno> alumno = null;
+        SessionFactory sf = HibernateUtil.abrirConexion();
+        Session session = sf.openSession();
+        Query hq = session.createQuery("from Alumno where electivo =:_electivo");
+        hq.setParameter("_electivo",_electivo);
+        alumno = hq.list();
+        HibernateUtil.cerrarSesion(sf);
+        return alumno;
+    }
     public static boolean editarAlumno(int _id, String _nombres, String _apellidos, String _genero, Date _fechaNacimiento, boolean _srp01, boolean _srp02, boolean _hpv01, boolean _hpv02, boolean _influencia) {
         Persona persona = null;
         SessionFactory sf = HibernateUtil.abrirConexion();

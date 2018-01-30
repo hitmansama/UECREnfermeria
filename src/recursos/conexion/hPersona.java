@@ -9,16 +9,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jdk.nashorn.internal.runtime.Debug;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import pojos.Electivo;
 import pojos.Persona;
-import recursos.Soporte.Herramientas;
 import static recursos.Soporte.Herramientas.toByte;
-import sun.util.logging.PlatformLogger;
 
 /**
  *
@@ -177,6 +173,22 @@ public class hPersona {
         persona.setInfluencia(toByte(_influencia));
         try {
             session.merge(persona);
+            tx.commit();
+            HibernateUtil.cerrarSesion();
+            return true;
+        } catch (Exception e) {
+            tx.rollback();
+            Logger.getLogger(hPersona.class.getName()).log(Level.SEVERE, null, e);
+        }
+        HibernateUtil.cerrarSesion(sf);
+        return false;
+    }
+    public static boolean editarPersona(Persona _persona){
+        SessionFactory sf = HibernateUtil.abrirConexion();
+        Session session = sf.openSession();
+        Transaction tx = session.beginTransaction();
+         try {
+            session.merge(_persona);
             tx.commit();
             HibernateUtil.cerrarSesion();
             return true;

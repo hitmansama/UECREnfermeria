@@ -123,7 +123,7 @@ public final class Herramientas {
            nimg.dispose();
            return nim;
        } catch (IOException ex) {
-           new PlayAudio().Error();
+           //new PlayAudio().Error();
            MensajeErr(ex.getMessage());
        }
         
@@ -132,6 +132,14 @@ public final class Herramientas {
    }
    public static Byte toByte(boolean _estado){
        return new Byte(_estado ? "1" : "0");
+   }
+   public static boolean isFloat(String _valor){
+       try {
+           Float.parseFloat(_valor);
+           return true;
+       } catch (Exception e) {
+           return false;
+       }
    }
     // <editor-fold defaultstate="collapsed" desc="JOPTION MENSAJES">   
    public static void MensajeInfo(String Texto){

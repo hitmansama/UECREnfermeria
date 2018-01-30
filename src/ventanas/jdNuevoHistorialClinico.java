@@ -5,6 +5,7 @@
  */
 package ventanas;
 
+import pojos.Alumno;
 import recursos.Soporte.Herramientas;
 import recursos.Soporte.consultas;
 
@@ -17,13 +18,13 @@ public class jdNuevoHistorialClinico extends javax.swing.JDialog {
     /**
      * Creates new form jdNuevoHistorialClinico
      */
-    int idAux;
+    Alumno alumno;
 
-    public jdNuevoHistorialClinico(java.awt.Frame parent, boolean modal, String _alumno, int _idAl) {
+    public jdNuevoHistorialClinico(java.awt.Frame parent, boolean modal,Alumno _alumno) {
         super(parent, modal);
         initComponents();
-        jpnHistorialClinico1.setNombreEstudiante(_alumno);
-        idAux = _idAl;
+        jpnHistorialClinico1.setNombreEstudiante(_alumno.toString());
+        alumno=_alumno;
         
     }
 
@@ -88,8 +89,8 @@ public class jdNuevoHistorialClinico extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-            jpnHistorialClinico1.setIdAlumno(idAux);
-        if (jpnHistorialClinico1.guardar())
+            
+        if (jpnHistorialClinico1.guardar(alumno))
                 this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -127,7 +128,7 @@ Herramientas.VentanaCentroWindows(this);        // TODO add your handling code h
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                jdNuevoHistorialClinico dialog = new jdNuevoHistorialClinico(new javax.swing.JFrame(), true, new String(),0);
+                jdNuevoHistorialClinico dialog = new jdNuevoHistorialClinico(new javax.swing.JFrame(), true, new Alumno());
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

@@ -154,9 +154,11 @@ public class Alumno  implements java.io.Serializable {
         this.historialclinicos = historialclinicos;
     }
 
-
-
-
+    @Override
+    public String toString() {
+        return persona.toString();
+    }
+    
 }
 
 
