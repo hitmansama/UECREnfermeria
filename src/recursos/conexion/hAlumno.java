@@ -174,4 +174,20 @@ public class hAlumno {
         HibernateUtil.cerrarSesion(sf);
         return false;
     }
+    public static boolean editarAlumno(Alumno _alumnoAlumno){
+        SessionFactory sf = HibernateUtil.abrirConexion();
+        Session session = sf.openSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            session.merge(_alumnoAlumno);
+            tx.commit();
+            HibernateUtil.cerrarSesion();
+            return true;
+        } catch (Exception e) {
+            tx.rollback();
+            Logger.getLogger(hPersona.class.getName()).log(Level.SEVERE, null, e);
+        }
+        HibernateUtil.cerrarSesion(sf);
+        return false;
+    }
 }

@@ -4,13 +4,21 @@
  * and open the template in the editor.
  */
 package ventanas;
+
 import recursos.Soporte.FondoEscritorio;
 import recursos.Soporte.Herramientas;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
 import recursos.Soporte.conector;
+
 /**
  *
  * @author PC
@@ -22,11 +30,22 @@ public class Principal extends javax.swing.JFrame {
      */
     public Principal() {
         initComponents();
-        Herramientas.CambiarIconoJFRAME(this,getClass().getResource("/recursos/imagenes/icono.png").toString());
+        Herramientas.cambiarIconoVentana(this, "/recursos/imagenes/icono.png");
         conector.obtener();
-        if(!conector.estadoConexion())
+        if (!conector.estadoConexion()) {
             System.exit(0);
+        }
         conector.cerrar();
+        generarIconos();
+    }
+
+    public void generarIconos() {
+       
+        jMenuItem2.setIcon(new Herramientas().getIcono("/recursos/imagenes/alumnoIco.png", 24, 24));
+        jMenuItem3.setIcon(new Herramientas().getIcono("/recursos/imagenes/calendarioIco.png", 24, 24));
+        jMenuItem4.setIcon(new Herramientas().getIcono("/recursos/imagenes/vacunaIco.png", 24, 24));
+        jMenuItem5.setIcon(new Herramientas().getIcono("/recursos/imagenes/virusIco.png", 24, 24));
+        jMenuItem6.setIcon(new Herramientas().getIcono("/recursos/imagenes/pesoIco.png", 24, 24));
     }
 
     /**
@@ -47,6 +66,8 @@ public class Principal extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setIconImages(null);
@@ -118,6 +139,24 @@ public class Principal extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem4);
 
+        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem5.setText("Formulario y alergia");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem5);
+
+        jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem6.setText("Peso y estatura");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem6);
+
         jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
@@ -138,22 +177,21 @@ public class Principal extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         Herramientas.fullSecreen(this);
-        Herramientas.CambiarIconoJFRAME(this, getClass().getResource("/recursos/imagenes/icono.png").toString());
-       this.setName("vPrincipal");
-       this.setTitle("UECR Registro medico");
-       jDesktopPane1.setBorder(new FondoEscritorio(getClass().getResource("/recursos/imagenes/fondoAzul.png").toString()));
+        this.setName("vPrincipal");
+        this.setTitle("UECR Registro medico");
+        jDesktopPane1.setBorder(new FondoEscritorio(getClass().getResource("/recursos/imagenes/fondoAzul.png").toString()));
     }//GEN-LAST:event_formWindowOpened
-  
+
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-      Herramientas.CerrarProgramaPrincipal();
+        Herramientas.CerrarProgramaPrincipal();
     }//GEN-LAST:event_formWindowClosing
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-       Herramientas.CerrarProgramaPrincipal();
+        Herramientas.CerrarProgramaPrincipal();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        Herramientas.AgregarVenEscritorio(jDesktopPane1,new jiRegistrarAlumnos());
+        Herramientas.AgregarVenEscritorio(jDesktopPane1, new jiRegistrarAlumnos());
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -161,9 +199,17 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        Herramientas.AgregarVenEscritorio(jDesktopPane1,new jiActualizarVacunas());
+        Herramientas.AgregarVenEscritorio(jDesktopPane1, new jiActualizarVacunas());
     }//GEN-LAST:event_jMenuItem4ActionPerformed
-    
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        Herramientas.AgregarVenEscritorio(jDesktopPane1, new jiActualizarAlergiaInforme());
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        Herramientas.AgregarVenEscritorio(jDesktopPane1, new jiActualizarTallaPeso());
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -209,5 +255,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,5 +1,5 @@
 package pojos;
-// Generated 19/01/2018 10:51:38 by Hibernate Tools 4.3.1
+// Generated 07/02/2018 12:49:53 by Hibernate Tools 4.3.1
 
 
 import java.util.HashSet;
@@ -158,7 +158,7 @@ public class Alumno  implements java.io.Serializable {
     public String toString() {
         return persona.toString();
     }
-    
+
 }
 
 

@@ -313,7 +313,7 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="jchInfluencia">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Influencia"/>
+            <Property name="text" type="java.lang.String" value="Influenza"/>
           </Properties>
         </Component>
       </SubComponents>

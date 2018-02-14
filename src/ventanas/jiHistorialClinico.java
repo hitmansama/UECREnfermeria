@@ -14,8 +14,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.SelectionMode;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import javax.swing.text.TableView;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import pojos.Alumno;
 import pojos.Electivo;
@@ -84,31 +91,70 @@ public class jiHistorialClinico extends javax.swing.JInternalFrame {
         dtm.addColumn("Hora");
         dtm.addColumn("Enfermedad");
         dtm.addColumn("Seguimmiento");
+        dtm.addColumn("aux");
+        if (jcbAlumno.getSelectedIndex() == 0) {
+            reiniciarContenido();
+            return;
+        }
         List<Historialclinico> historial = hHistorial.obtenerHistorialPorAlumno((Alumno) jcbAlumno.getSelectedItem());
         if (historial != null) {
             Iterator it = historial.iterator();
             for (Iterator<Historialclinico> iterator = historial.iterator(); iterator.hasNext();) {
+                boolean agregar = true;
                 Historialclinico next = iterator.next();
-                dtm.addRow(new String[]{new SimpleDateFormat("dd-MMM-yyyy").format(next.getFecha()), new SimpleDateFormat("hh:mm").format(next.getHora()), next.getEnfermedad() + ": " + next.getDetalle(), next.getSeguimiento() == 1 ? "Si" : "No"});
+                if (jcbFiltroHistorial.getSelectedIndex() == 2) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(next.getFecha());
+                    agregar = cal.get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH);
+                }
+
+                if (jcbFiltroHistorial.getSelectedIndex() == 1) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(next.getFecha());
+                    agregar = cal.get(Calendar.WEEK_OF_YEAR) == Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+                }
+
+                if (agregar) {
+                    Object[] objetos = new Object[5];
+                    objetos[0] = new SimpleDateFormat("dd-MMM-yyyy").format(next.getFecha());
+                    objetos[1] = new SimpleDateFormat("hh:mm").format(next.getHora());
+                    objetos[2] = next.getEnfermedad() + ": " + next.getDetalle();
+                    objetos[3] = next.getRecomendacion().trim().isEmpty() ? "Sin recomendación" : next.getSeguimiento() == 1 ? next.getRecomendacion() + ". Se ha seguido las recomendaciones." : next.getRecomendacion() + ". No se ha seguido las recomendaciones";
+                    objetos[4] = next;
+//                    dtm.addRow(new String[]{new SimpleDateFormat("dd-MMM-yyyy").format(next.getFecha()), new SimpleDateFormat("hh:mm").format(next.getHora()), next.getEnfermedad() + ": " + next.getDetalle(), next.getRecomendacion().trim().isEmpty() ? "Sin recomendación" : next.getSeguimiento() == 1 ? next.getRecomendacion() + "Se ha seguido las recomendaciones." : next.getRecomendacion() + ". No se ha seguido las recomendaciones"});
+                    dtm.addRow(objetos);
+
+                }
             }
             jtHistorial.setModel(dtm);
+            jtHistorial.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            jtHistorial.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            jtHistorial.setDefaultEditor(Object.class, null);
+            jtHistorial.getTableHeader().setReorderingAllowed(false);
+            jtHistorial.removeColumn(jtHistorial.getColumnModel().getColumn(4));
         }
-       
+
     }
-    
-    private void reiniciarContenido(){
+
+    private void deshabilitarEdicionTabla() {
+        TableModel cm = jtHistorial.getModel();
+
+    }
+
+    private void reiniciarContenido() {
         jchHPV01.setSelected(false);
-            jchHPV02.setSelected(false);
-            jchSRP01.setSelected(false);
-            jchSRP02.setSelected(false);
-            jchInfluencia.setSelected(false);
-            jtxtRepresentante.setText("");
-            jtxtContactoRepresentante.setText("");
-            jtxtDetalle.setText("");
-            jopEnviado.setSelected(false);
-            jopRecibido.setSelected(false);
-            jtHistorial.setModel(new DefaultTableModel());
+        jchHPV02.setSelected(false);
+        jchSRP01.setSelected(false);
+        jchSRP02.setSelected(false);
+        jchInfluencia.setSelected(false);
+        jtxtRepresentante.setText("");
+        jtxtContactoRepresentante.setText("");
+        jtxtDetalle.setText("");
+        jopEnviado.setSelected(false);
+        jopRecibido.setSelected(false);
+        jtHistorial.setModel(new DefaultTableModel());
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -136,11 +182,22 @@ public class jiHistorialClinico extends javax.swing.JInternalFrame {
         jopRecibido = new javax.swing.JRadioButton();
         jtxtDetalle = new javax.swing.JTextField();
         jcbFiltroHistorial = new javax.swing.JComboBox<>();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jtxtEstaturaInicial = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jtxtPesoInicial = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jtxtEstaturaFinal = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jtxtPesoFinal = new javax.swing.JTextField();
+        jbSeguimiento = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
         setTitle("Historial clinico");
         setToolTipText("");
+        setName(""); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("Año electivo");
@@ -170,6 +227,11 @@ public class jiHistorialClinico extends javax.swing.JInternalFrame {
 
             }
         ));
+        jtHistorial.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jtHistorialFocusGained(evt);
+            }
+        });
         jScrollPane1.setViewportView(jtHistorial);
 
         jbNuevo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -235,7 +297,7 @@ public class jiHistorialClinico extends javax.swing.JInternalFrame {
         });
 
         jchInfluencia.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jchInfluencia.setText("Influencia");
+        jchInfluencia.setText("Influenza");
         jchInfluencia.setEnabled(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -282,11 +344,6 @@ public class jiHistorialClinico extends javax.swing.JInternalFrame {
         jopRecibido.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jopRecibido.setText("Recibido");
         jopRecibido.setEnabled(false);
-        jopRecibido.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jopRecibidoActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -328,11 +385,10 @@ public class jiHistorialClinico extends javax.swing.JInternalFrame {
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jtxtRepresentante, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(67, 67, 67)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtxtContactoRepresentante, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jtxtContactoRepresentante, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -358,7 +414,91 @@ public class jiHistorialClinico extends javax.swing.JInternalFrame {
         );
 
         jcbFiltroHistorial.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jcbFiltroHistorial.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Esta semana", "Este mes", "Este año" }));
+        jcbFiltroHistorial.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todo el año", "Esta semana", "Este mes" }));
+        jcbFiltroHistorial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbFiltroHistorialActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel5.setText("Estatura inicial:");
+
+        jtxtEstaturaInicial.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jtxtEstaturaInicial.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jtxtEstaturaInicial.setEnabled(false);
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel6.setText("Peso inicial:");
+
+        jtxtPesoInicial.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jtxtPesoInicial.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jtxtPesoInicial.setEnabled(false);
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel7.setText("Estatura final:");
+
+        jtxtEstaturaFinal.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jtxtEstaturaFinal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jtxtEstaturaFinal.setEnabled(false);
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel8.setText("Peso final:");
+
+        jtxtPesoFinal.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jtxtPesoFinal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jtxtPesoFinal.setEnabled(false);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jtxtEstaturaInicial, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jtxtPesoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jtxtEstaturaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jtxtPesoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(jtxtEstaturaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel8)
+                        .addComponent(jtxtPesoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6)
+                        .addComponent(jtxtPesoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5)
+                        .addComponent(jtxtEstaturaInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jbSeguimiento.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jbSeguimiento.setText("Seguimiento");
+        jbSeguimiento.setEnabled(false);
+        jbSeguimiento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbSeguimientoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -380,7 +520,10 @@ public class jiHistorialClinico extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jcbFiltroHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jbNuevo)))
+                        .addComponent(jbSeguimiento)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbNuevo))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -394,12 +537,15 @@ public class jiHistorialClinico extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jcbAlumno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jcbFiltroHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbNuevo))
+                    .addComponent(jbNuevo)
+                    .addComponent(jbSeguimiento))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -416,26 +562,29 @@ public class jiHistorialClinico extends javax.swing.JInternalFrame {
         if (jcbAlumno.getSelectedIndex() > 0) {
             Alumno aux = (Alumno) jcbAlumno.getSelectedItem();
             Persona per = aux.getPersona();
-            jchHPV01.setSelected(per.getHpv01()==1?true:false);
-            jchHPV02.setSelected(per.getHpv02()==1?true:false);
-            jchSRP01.setSelected(per.getSrp01()==1?true:false);
-            jchSRP02.setSelected(per.getSrp02()==1?true:false);
-            jchInfluencia.setSelected(per.getInfluencia()==1?true:false);
+            jchHPV01.setSelected(per.getHpv01() == 1 ? true : false);
+            jchHPV02.setSelected(per.getHpv02() == 1 ? true : false);
+            jchSRP01.setSelected(per.getSrp01() == 1 ? true : false);
+            jchSRP02.setSelected(per.getSrp02() == 1 ? true : false);
+            jchInfluencia.setSelected(per.getInfluencia() == 1 ? true : false);
             jtxtRepresentante.setText(aux.getRepresentante().toString());
             jtxtContactoRepresentante.setText(aux.getRepresentante().getContacto());
             jtxtDetalle.setText(aux.getAlergia());
-            jopEnviado.setSelected(aux.getSeEnvioFormulario()==1?true:false);
-            jopRecibido.setSelected(aux.getSeRecibioFormulario()==1?true:false);
+            jopEnviado.setSelected(aux.getSeEnvioFormulario() == 1 ? true : false);
+            jopRecibido.setSelected(aux.getSeRecibioFormulario() == 1 ? true : false);
+            jtxtEstaturaInicial.setText(Float.toString(aux.getEstaturaInicial()) + "cm");
+            jtxtEstaturaFinal.setText(Float.toString(aux.getEstaturaFinal()) + "cm");
+            jtxtPesoInicial.setText(Float.toString(aux.getPesoInicial()) + "Kg");
+            jtxtPesoFinal.setText(Float.toString(aux.getPesoFinal()) + "Kg");
             cargarListaHistoria();
-        }
-        else{
+        } else {
             reiniciarContenido();
         }
         jbNuevo.setEnabled(jcbAlumno.getSelectedIndex() > 0);
     }//GEN-LAST:event_jcbAlumnoActionPerformed
 
     private void jbNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbNuevoActionPerformed
-        new jdNuevoHistorialClinico(null, true, (Alumno)jcbAlumno.getSelectedItem()).show();
+        new jdNuevoHistorialClinico(null, true, (Alumno) jcbAlumno.getSelectedItem()).show();
         cargarListaHistoria();
     }//GEN-LAST:event_jbNuevoActionPerformed
 
@@ -459,13 +608,39 @@ public class jiHistorialClinico extends javax.swing.JInternalFrame {
         jopEnviado.setSelected(!jopEnviado.isSelected());
     }//GEN-LAST:event_jopEnviadoActionPerformed
 
-    private void jopRecibidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jopRecibidoActionPerformed
-        jopRecibido.setSelected(!jopRecibido.isSelected());
-    }//GEN-LAST:event_jopRecibidoActionPerformed
-
     private void jtxtDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtDetalleActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jtxtDetalleActionPerformed
+
+    private void jcbFiltroHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbFiltroHistorialActionPerformed
+        cargarListaHistoria();
+    }//GEN-LAST:event_jcbFiltroHistorialActionPerformed
+
+    private void jbSeguimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSeguimientoActionPerformed
+
+        new jdEditarSeguimiento(null, true, (Historialclinico) jtHistorial.getModel().getValueAt(jtHistorial.getSelectedRow(), 4)).show();
+        Alumno aux = (Alumno) jcbAlumno.getSelectedItem();
+        Persona per = aux.getPersona();
+        jchHPV01.setSelected(per.getHpv01() == 1 ? true : false);
+        jchHPV02.setSelected(per.getHpv02() == 1 ? true : false);
+        jchSRP01.setSelected(per.getSrp01() == 1 ? true : false);
+        jchSRP02.setSelected(per.getSrp02() == 1 ? true : false);
+        jchInfluencia.setSelected(per.getInfluencia() == 1 ? true : false);
+        jtxtRepresentante.setText(aux.getRepresentante().toString());
+        jtxtContactoRepresentante.setText(aux.getRepresentante().getContacto());
+        jtxtDetalle.setText(aux.getAlergia());
+        jopEnviado.setSelected(aux.getSeEnvioFormulario() == 1 ? true : false);
+        jopRecibido.setSelected(aux.getSeRecibioFormulario() == 1 ? true : false);
+        jtxtEstaturaInicial.setText(Float.toString(aux.getEstaturaInicial()) + "cm");
+        jtxtEstaturaFinal.setText(Float.toString(aux.getEstaturaFinal()) + "cm");
+        jtxtPesoInicial.setText(Float.toString(aux.getPesoInicial()) + "Kg");
+        jtxtPesoFinal.setText(Float.toString(aux.getPesoFinal()) + "Kg");
+        cargarListaHistoria();
+    }//GEN-LAST:event_jbSeguimientoActionPerformed
+
+    private void jtHistorialFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtHistorialFocusGained
+        jbSeguimiento.setEnabled(true);
+    }//GEN-LAST:event_jtHistorialFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -473,11 +648,17 @@ public class jiHistorialClinico extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbNuevo;
+    private javax.swing.JButton jbSeguimiento;
     private javax.swing.JComboBox<String> jcbAlumno;
     private javax.swing.JComboBox<String> jcbElectivo;
     private javax.swing.JComboBox<String> jcbFiltroHistorial;
@@ -491,6 +672,10 @@ public class jiHistorialClinico extends javax.swing.JInternalFrame {
     private javax.swing.JTable jtHistorial;
     private javax.swing.JTextField jtxtContactoRepresentante;
     private javax.swing.JTextField jtxtDetalle;
+    private javax.swing.JTextField jtxtEstaturaFinal;
+    private javax.swing.JTextField jtxtEstaturaInicial;
+    private javax.swing.JTextField jtxtPesoFinal;
+    private javax.swing.JTextField jtxtPesoInicial;
     private javax.swing.JTextField jtxtRepresentante;
     // End of variables declaration//GEN-END:variables
 }

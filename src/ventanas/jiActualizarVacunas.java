@@ -111,7 +111,7 @@ public class jiActualizarVacunas extends javax.swing.JInternalFrame {
             }
         });
 
-        jchSrp02.setText("SRP0");
+        jchSrp02.setText("SRP02");
 
         jchHpv01.setText("HPV01");
         jchHpv01.addActionListener(new java.awt.event.ActionListener() {
@@ -122,7 +122,7 @@ public class jiActualizarVacunas extends javax.swing.JInternalFrame {
 
         jchHpv02.setText("HPV02");
 
-        jchInfluencia.setText("Influencia");
+        jchInfluencia.setText("Influenza");
 
         javax.swing.GroupLayout jpnVacunasLayout = new javax.swing.GroupLayout(jpnVacunas);
         jpnVacunas.setLayout(jpnVacunasLayout);

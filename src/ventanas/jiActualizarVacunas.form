@@ -143,7 +143,7 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="jchSrp02">
           <Properties>
-            <Property name="text" type="java.lang.String" value="SRP0"/>
+            <Property name="text" type="java.lang.String" value="SRP02"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="jchHpv01">
@@ -161,7 +161,7 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="jchInfluencia">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Influencia"/>
+            <Property name="text" type="java.lang.String" value="Influenza"/>
           </Properties>
         </Component>
       </SubComponents>

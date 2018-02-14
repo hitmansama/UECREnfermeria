@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 19/01/2018 10:51:39 by Hibernate Tools 4.3.1 -->
+<!-- Generated 07/02/2018 12:49:54 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="pojos.Alumno" table="alumno" catalog="uecr" optimistic-lock="version">
         <id name="id" type="java.lang.Integer">
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="electivo" class="pojos.Electivo" fetch="select" lazy="false">
+        <many-to-one name="electivo" class="pojos.Electivo" fetch="select">
             <column name="electivo_id" not-null="true" />
         </many-to-one>
         <many-to-one name="persona" class="pojos.Persona" fetch="select" lazy="false">
@@ -44,7 +44,7 @@
         <property name="alergia" type="string">
             <column name="alergia" length="150" />
         </property>
-        <set name="historialclinicos" table="historialclinico" inverse="true" lazy="false" fetch="select">
+        <set name="historialclinicos" table="historialclinico" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="alumno_id" not-null="true" />
             </key>

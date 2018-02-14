@@ -20,11 +20,17 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.net.URISyntaxException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import jdk.nashorn.internal.objects.NativeDebug;
-
+import ventanas.Principal;
+/**
+ * getIcono no static. CONSTRUIR
+ * @author PC
+ */
 public final class Herramientas {
    public static void fullSecreen(JFrame ventana){
        ventana.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -91,8 +97,28 @@ public final class Herramientas {
        CentrarInternalEscritorio(ventana, escritorio);
        ventana.show();
    }
-   public static void CambiarIconoJFRAME(JFrame ventana,String dir){
-      ventana.setIconImage(new ImageIcon(dir).getImage());
+   public static void cambiarIconoVentana(Window ventana,String url)
+    {
+        try
+        {
+            InputStream imageInputStream = ventana.getClass().getResourceAsStream(url);
+            BufferedImage bufferedImage = ImageIO.read(imageInputStream);
+            ventana.setIconImage(bufferedImage);
+        } catch (IOException exception)
+        {
+            exception.printStackTrace();
+        }
+    }
+   public  ImageIcon getIcono(String url,int ancho, int alto){
+        ImageIcon imageIcon = null;
+        try {
+            imageIcon = new ImageIcon(ImageIO.read(getClass().getResourceAsStream(url)));
+            Image aux = imageIcon.getImage();
+            imageIcon = new ImageIcon(aux.getScaledInstance(ancho, alto, Image.SCALE_SMOOTH));
+        } catch (IOException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return imageIcon;
    }
    public static void CerrarProgramaPrincipal(){
        if(OkCancelQues(IdiomaESP.mSalir,IdiomaESP.tSalir) == JOptionPane.OK_OPTION){
@@ -140,6 +166,9 @@ public final class Herramientas {
        } catch (Exception e) {
            return false;
        }
+   }
+   public static String formatearDecimal(Float _valor){
+       return String.format(Locale.ROOT,"%.2f", _valor);
    }
     // <editor-fold defaultstate="collapsed" desc="JOPTION MENSAJES">   
    public static void MensajeInfo(String Texto){

@@ -267,7 +267,7 @@ public class jpnAgregarAlumno extends javax.swing.JPanel {
         jchHPV02.setText("HPV 02");
         jchHPV02.setEnabled(false);
 
-        jchInfluencia.setText("Influencia");
+        jchInfluencia.setText("Influenza");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);

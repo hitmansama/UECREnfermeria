@@ -16,28 +16,47 @@ public class hHistorial {
 
     public static List<Historialclinico> obtenerHistorialPorAlumno(Alumno _alumno) {
         List<Historialclinico> historial = null;
-        SessionFactory sf = HibernateUtil.abrirConexion();
-        Session session = sf.openSession();
-        Query q = session.createQuery("from Historialclinico where alumno =:_alumno");
-        q.setParameter("_alumno", _alumno);
-        historial = q.list();
-        HibernateUtil.cerrarSesion();
+        if (_alumno != null) {
+            SessionFactory sf = HibernateUtil.abrirConexion();
+            Session session = sf.openSession();
+            Query q = session.createQuery("from Historialclinico where alumno =:_alumno");
+            q.setParameter("_alumno", _alumno);
+            historial = q.list();
+            HibernateUtil.cerrarSesion();
+        }
         return historial;
     }
 
-    public static boolean guardarHistorial(Alumno _alumno, String _enfermedad, String _detalle, boolean _Seguimiento) {
+    public static boolean guardarHistorial(Alumno _alumno, String _enfermedad, String _recomendacion, String _detalle, boolean _Seguimiento) {
         SessionFactory sf = HibernateUtil.abrirConexion();
         Session session = sf.openSession();
         boolean estado = false;
         Transaction tx = session.beginTransaction();
         try {
-            Historialclinico hs = new Historialclinico(_alumno, _enfermedad, Calendar.getInstance().getTime(), Calendar.getInstance().getTime(), Herramientas.toByte(_Seguimiento), _detalle);
+            //Alumno alumno, String enfermedad, Date fecha, Date hora, Byte seguimiento, String recomendacion, String detalle
+            Historialclinico hs = new Historialclinico(_alumno, _enfermedad, Calendar.getInstance().getTime(), Calendar.getInstance().getTime(), Herramientas.toByte(_Seguimiento), _recomendacion, _detalle);
             session.save(hs);
             estado = true;
             tx.commit();
             HibernateUtil.cerrarSesion();
         } catch (Exception e) {
-            Logger.getLogger(hHistorial.class.getName()).log(Level.SEVERE,null,e.getMessage());
+            Logger.getLogger(hHistorial.class.getName()).log(Level.SEVERE, null, e.getMessage());
+            tx.rollback();
+        }
+        return estado;
+    }
+    public static boolean actualizarHistorial(Historialclinico _historialClinico) {
+        SessionFactory sf = HibernateUtil.abrirConexion();
+        Session session = sf.openSession();
+        boolean estado = false;
+        Transaction tx = session.beginTransaction();
+        try {
+            session.merge(_historialClinico);
+            estado = true;
+            tx.commit();
+            HibernateUtil.cerrarSesion();
+        } catch (Exception e) {
+            Logger.getLogger(hHistorial.class.getName()).log(Level.SEVERE, null, e.getMessage());
             tx.rollback();
         }
         return estado;

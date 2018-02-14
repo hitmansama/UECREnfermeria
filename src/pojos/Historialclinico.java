@@ -1,5 +1,5 @@
 package pojos;
-// Generated 19/01/2018 10:51:38 by Hibernate Tools 4.3.1
+// Generated 07/02/2018 12:49:53 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -16,6 +16,7 @@ public class Historialclinico  implements java.io.Serializable {
      private Date fecha;
      private Date hora;
      private Byte seguimiento;
+     private String recomendacion;
      private String detalle;
 
     public Historialclinico() {
@@ -28,12 +29,13 @@ public class Historialclinico  implements java.io.Serializable {
         this.fecha = fecha;
         this.hora = hora;
     }
-    public Historialclinico(Alumno alumno, String enfermedad, Date fecha, Date hora, Byte seguimiento, String detalle) {
+    public Historialclinico(Alumno alumno, String enfermedad, Date fecha, Date hora, Byte seguimiento, String recomendacion, String detalle) {
        this.alumno = alumno;
        this.enfermedad = enfermedad;
        this.fecha = fecha;
        this.hora = hora;
        this.seguimiento = seguimiento;
+       this.recomendacion = recomendacion;
        this.detalle = detalle;
     }
    
@@ -78,6 +80,13 @@ public class Historialclinico  implements java.io.Serializable {
     
     public void setSeguimiento(Byte seguimiento) {
         this.seguimiento = seguimiento;
+    }
+    public String getRecomendacion() {
+        return this.recomendacion;
+    }
+    
+    public void setRecomendacion(String recomendacion) {
+        this.recomendacion = recomendacion;
     }
     public String getDetalle() {
         return this.detalle;

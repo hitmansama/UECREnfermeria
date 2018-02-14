@@ -22,6 +22,8 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import pojos.Alumno;
 import pojos.Electivo;
 import pojos.Representante;
+import static recursos.Soporte.Herramientas.formatearDecimal;
+import static recursos.Soporte.Herramientas.isFloat;
 import recursos.conexion.hAlumno;
 import recursos.conexion.hElectivo;
 import recursos.conexion.hRepresentante;
@@ -144,6 +146,8 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
         jchRecibido = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         jtxtAlergia = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
 
         setClosable(true);
         setIconifiable(true);
@@ -215,11 +219,25 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
         jLabel6.setText("Estatura Inicial:");
 
         jtxtEstaturaInicial.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jtxtEstaturaInicial.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jtxtEstaturaInicial.setText("0.00");
+        jtxtEstaturaInicial.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jtxtEstaturaInicialFocusLost(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setText("Peso Inicial:");
 
         jtxtPesoInicial.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jtxtPesoInicial.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jtxtPesoInicial.setText("0.00");
+        jtxtPesoInicial.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jtxtPesoInicialFocusLost(evt);
+            }
+        });
 
         jButton3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton3.setText("Cancelar");
@@ -284,6 +302,10 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jLabel8.setText("cm");
+
+        jLabel9.setText("Kg");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -313,23 +335,29 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
                                     .addComponent(jButton2))
                                 .addComponent(jcbElectivo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jcbEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jButton5)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jButton1))
+                                .addGroup(layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jtxtCurso, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jtxtEstaturaInicial, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jtxtEstaturaInicial, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jLabel8)))
                                     .addGap(18, 18, 18)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel5)
                                         .addComponent(jLabel7))
                                     .addGap(48, 48, 48)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jtxtPesoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jtxtParalelo, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jcbEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jButton5)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jButton1))))
+                                        .addComponent(jtxtParalelo, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jtxtPesoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jLabel9))))))
                         .addComponent(jSeparator1))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -375,7 +403,9 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
                     .addComponent(jLabel6)
                     .addComponent(jtxtEstaturaInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
-                    .addComponent(jtxtPesoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jtxtPesoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -494,6 +524,14 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_jchRecibidoActionPerformed
 
+    private void jtxtEstaturaInicialFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtxtEstaturaInicialFocusLost
+       jtxtEstaturaInicial.setText(isFloat(jtxtEstaturaInicial.getText())?formatearDecimal(Float.parseFloat(jtxtEstaturaInicial.getText())):"0.00");
+    }//GEN-LAST:event_jtxtEstaturaInicialFocusLost
+
+    private void jtxtPesoInicialFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtxtPesoInicialFocusLost
+         jtxtPesoInicial.setText(isFloat(jtxtPesoInicial.getText())?formatearDecimal(Float.parseFloat(jtxtPesoInicial.getText())):"0.00");
+    }//GEN-LAST:event_jtxtPesoInicialFocusLost
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -509,6 +547,8 @@ public class jiRegistrarAlumnos extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
